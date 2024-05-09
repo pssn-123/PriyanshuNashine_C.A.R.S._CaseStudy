@@ -1,14 +1,14 @@
 class Incidents:
-    def __init__(self, incidentid, incidenttype, incidentdate, latitude, longitude, description, status, victimid, suspectid):
+    def __init__(self, incidentid, incident_type, incident_date, latitude, longitude, status, victim_id, suspect_id, case_id):
         self.__IncidentID = incidentid
-        self.__IncidentType = incidenttype
-        self.__IncidentDate = incidentdate
+        self.__IncidentType = incident_type
+        self.__IncidentDate = incident_date
         self.__Latitude = latitude
         self.__Longitude = longitude
-        self.__Description = description
         self.__Status = status
-        self.__VictimID = victimid
-        self.__SuspectID = suspectid
+        self.__VictimID = victim_id
+        self.__SuspectID = suspect_id
+        self.__CaseID = case_id
 
     # setters
     def set_incidentid(self, incidentid):
@@ -26,9 +26,6 @@ class Incidents:
     def set_location(self, longitude):
         self.__Longitude = longitude
 
-    def set_description(self, description):
-        self.__Description = description
-
     def set_status(self, status):
         self.__Status = status
 
@@ -38,6 +35,9 @@ class Incidents:
     def set_suspectid(self, suspectid):
         self.__SuspectID = suspectid
 
+
+    def set_caseid(self, caseid):
+        self.__CaseID = caseid
     # getters
     def get_incidentid(self):
         return self.__IncidentID
@@ -54,9 +54,6 @@ class Incidents:
     def get_longitude(self):
         return self.__Longitude
 
-    def get_description(self):
-        return self.__Description
-
     def get_status(self):
         return self.__Status
 
@@ -65,3 +62,7 @@ class Incidents:
 
     def get_suspectid(self):
         return self.__SuspectID
+
+
+    def get_caseid(self):
+        return self.__CaseID
