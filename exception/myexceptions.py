@@ -1,11 +1,6 @@
 class IncidentNumberNotFound(Exception):
-    def __init__(self, msg):
+    def __init__(self, msg = 'Incident id Not found or already exist'):
         super().__init__(msg)
 
 
-try:
-    raise IncidentNumberNotFound('Incident number not found')
-
-except IncidentNumberNotFound as e:
-    print(e)
 

@@ -1,37 +1,48 @@
-from abc import ABC,abstractmethod
+from entity.model.Case import *
+from abc import ABC, abstractmethod
+
+
 class ICrimeAnalysisService(ABC):
     @abstractmethod
-    def createIncident(self,incident):
+    def create_incident(self, incident):
         pass
 
     @abstractmethod
-    def updateIncidentStatus(self, incidentid, status):
+    def update_incident_status(self, incidentid, status):
         pass
 
     @abstractmethod
-    def getIncidentsInDateRange(self, startdate, enddate):
+    def get_incidents_in_date_range(self, startdate, enddate):
         pass
 
     @abstractmethod
-    def searchIncidents(self):
+    def search_incidents(self, incidenttype):
         pass
 
     @abstractmethod
-    def generateIncidentReport(self):
+    def generate_incident_report(self):
         pass
 
     @abstractmethod
-    def createCase(self):
+    def create_case(self):
         pass
 
     @abstractmethod
-    def getCaseDetails(self):
+    def update_case_details(self, case_id: Case) -> bool:
         pass
 
     @abstractmethod
-    def updateCaseDetails(self):
+    def get_all_cases(self):
         pass
 
     @abstractmethod
-    def getallcases(self):
+    def get_case_details(self, case_id: int) -> Case:
+        pass
+
+    @abstractmethod
+    def delete_incident(self, incident_id: int) -> bool:
+        pass
+
+    @abstractmethod
+    def show_incidents(self):
         pass

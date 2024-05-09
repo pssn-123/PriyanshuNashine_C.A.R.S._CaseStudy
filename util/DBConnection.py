@@ -1,15 +1,9 @@
 import mysql.connector as sql
 from util.PropertyUtil import *
 
-"""conn = sql.connect(host='localhost', database = 'CARS', user = 'root', password = 'Priyanshu2003')
-if conn.is_connected:
-    print("The database is connected")
-stmt = conn.cursor()
-stmt.execute('create table Examp(id int primary key auto_increment, ')
-print(stmt.fetchall())
-"""
-class DBConnection:
 
+class DBConnection:
+    conn = ''
     @staticmethod
     def getConnection():
         l = PropertyUtil.getPropertyString()
