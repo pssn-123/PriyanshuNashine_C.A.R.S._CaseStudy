@@ -1,8 +1,7 @@
-from abc import ABC
 from dao.CrimeAnalysisServiceImpl import *
 
 
-class MainModule(CrimeAnalysisServiceImpl, ABC):
+class MainModule(CrimeAnalysisServiceImpl):
 
     @staticmethod
     def menu():
@@ -20,10 +19,15 @@ class MainModule(CrimeAnalysisServiceImpl, ABC):
     @staticmethod
     def main():
         crime_service = CrimeAnalysisServiceImpl()
+        print('Welcome to Crime Analysis and Reporting System')
 
-        while input("Enter key to continue"):
+        while not input("Enter to continue\nor press any key to Exit"):
             MainModule.menu()
             choice = input("Enter your choice of operation:\n")
+
+            #Operation to see the list of incidents not included into the menu of operations
+            if choice == 'showincidents':
+                crime_service.show_incidents()
 
             if choice == '1':
                 #Create a new Incident
