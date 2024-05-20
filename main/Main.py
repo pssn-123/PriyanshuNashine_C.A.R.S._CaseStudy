@@ -74,7 +74,6 @@ class MainModule(CrimeAnalysisServiceImpl):
                     print("Incident Type:", incidents.get_incidenttype())
                     print("Incident Date:", incidents.get_incidentdate())
                     print("Location:", incidents.get_latitude(), incidents.get_longitude())
-                    print("Description:", incidents.get_description())
                     print("Status:", incidents.get_status())
                     print("Victim ID:", incidents.get_victimid())
                     print("Suspect ID:", incidents.get_suspectid())
