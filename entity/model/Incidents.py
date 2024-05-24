@@ -17,7 +17,7 @@ class Incidents:
     def set_incidenttype(self, incidenttype):
         self.__IncidentType = incidenttype
 
-    def incidentdate(self, incidentdate):
+    def set_incidentdate(self, incidentdate):
         self.__IncidentDate = incidentdate
 
     def set_location(self, latitude):
@@ -35,9 +35,9 @@ class Incidents:
     def set_suspectid(self, suspectid):
         self.__SuspectID = suspectid
 
-
     def set_caseid(self, caseid):
         self.__CaseID = caseid
+
     # getters
     def get_incidentid(self):
         return self.__IncidentID
@@ -62,7 +62,6 @@ class Incidents:
 
     def get_suspectid(self):
         return self.__SuspectID
-
 
     def get_caseid(self):
         return self.__CaseID

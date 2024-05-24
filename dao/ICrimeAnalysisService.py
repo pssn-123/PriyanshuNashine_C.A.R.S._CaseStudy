@@ -20,7 +20,7 @@ class ICrimeAnalysisService(ABC):
         pass
 
     @abstractmethod
-    def generate_incident_report(self):
+    def generate_incident_report(self, incidentid):
         pass
 
     @abstractmethod

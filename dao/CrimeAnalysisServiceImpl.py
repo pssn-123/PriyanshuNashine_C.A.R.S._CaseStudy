@@ -7,14 +7,13 @@ from typing import *
 from util.DBConnection import DBConnection
 
 
-
-class CrimeAnalysisServiceImpl(ICrimeAnalysisService,Incidents):
+class CrimeAnalysisServiceImpl(ICrimeAnalysisService, Incidents):
     def __init__(self):
         self.connection = DBConnection.getConnection()
         if self.connection is None:
             print('Failed to Establish the connection')
 
-    def create_incident(self, incident:Incidents) -> bool:
+    def create_incident(self, incident: Incidents) -> bool:
         try:
             cursor = self.connection.cursor()
 
@@ -24,7 +23,7 @@ class CrimeAnalysisServiceImpl(ICrimeAnalysisService,Incidents):
                 incident.get_latitude(), incident.get_longitude(),
                 incident.get_status(), incident.get_victimid(), incident.get_suspectid(), incident.get_caseid()
             ]
-            cursor.execute(query,values)
+            cursor.execute(query, values)
             self.connection.commit()
             cursor.close()
             return True
@@ -32,9 +31,8 @@ class CrimeAnalysisServiceImpl(ICrimeAnalysisService,Incidents):
             if e.errno == 1062:
                 print("duplicate Incidentid not acceptable insert a unique incidentid")
             else:
-                print('Error creating incident',e)
+                print('Error creating incident', e)
             return False
-
 
     def update_incident_status(self, incidentid, status):
         try:
@@ -55,7 +53,7 @@ class CrimeAnalysisServiceImpl(ICrimeAnalysisService,Incidents):
         try:
             cursor = self.connection.cursor()
             query = 'Select * from incidents where incidentdate between %s and %s'
-            cursor.execute(query ,(startdate, enddate))
+            cursor.execute(query, (startdate, enddate))
             rows = cursor.fetchall()
             incidents = []
             for row in rows:
@@ -79,28 +77,33 @@ class CrimeAnalysisServiceImpl(ICrimeAnalysisService,Incidents):
         self.connection.commit()
         return incidents
 
-    # having doubt
     def generate_incident_report(self, incidentid) -> list[Reports]:
+        try:
             cursor = self.connection.cursor()
             query = 'Select * from reports where incidentid = %s'
-            value = (incidentid, )
+            value = (incidentid,)
             cursor.execute(query, value)
             rows = cursor.fetchall()
             reports = []
-            for row in rows:
-                report = Reports(
-                    reportid= row[0],
-                    incidentid=row[1],
-                    reportingofficer=row[2],
-                    reportdate = row[3],
-                    reportdetails=row[4]
-                )
-                reports.append(report)
-            self.connection.commit()
-            return reports
-
-
-    def create_case(self, case_description: str) -> Case :
+            if rows:
+                for row in rows:
+                    report = Reports(
+                        reportid=row[0],
+                        incidentid=row[1],
+                        reportingofficer=row[2],
+                        reportdate=row[3],
+                        reportdetails=row[4]
+                    )
+                    reports.append(report)
+                    self.connection.commit()
+                    return reports
+            else:
+                raise IncidentNumberNotFound
+                return None
+        except Exception as e:
+            print("Error :", e)
+            return None
+    def create_case(self, case_description: str) -> Case:
         try:
             cursor = self.connection.cursor()
 
@@ -116,7 +119,7 @@ class CrimeAnalysisServiceImpl(ICrimeAnalysisService,Incidents):
             return None
 
     def get_all_cases(self) -> list[Case]:
-        #try:
+        try:
             cursor = self.connection.cursor()
             select_query = "SELECT * FROM Cases"
             cursor.execute(select_query)
@@ -130,23 +133,24 @@ class CrimeAnalysisServiceImpl(ICrimeAnalysisService,Incidents):
                 cursor.execute(select_query, (case_id,))
                 incidents_data = cursor.fetchall()
 
-                incidents = [Incidents(* incident_data)for incident_data in incidents_data]
+                incidents = [Incidents(*incident_data) for incident_data in incidents_data]
                 case_instance = Case(case_id, case_description, incidents)
                 cases.append(case_instance)
 
             cursor.close()
             return cases
-        #except Exception as e:
-            #print(f"Error getting all cases: {e}")
-            #return []
+        except Exception as e:
+            print(f"Error getting all cases: {e}")
+            return []
 
     def get_case_details(self, case_id: int) -> Case:
         try:
             cursor = self.connection.cursor()
 
             # SQL query to retrieve case details and associated incidents
-            select_query = ("SELECT c.CaseID, c.CaseDescription, i.IncidentID, i.IncidentDate, i.IncidentType, i.Latitudes, i.Longitudes, i.Status, i.VictimID, i.SuspectID "
-                            "FROM Cases c LEFT JOIN Incidents i ON c.CaseID = i.CaseID WHERE c.CaseID = %s")
+            select_query = (
+                "SELECT c.CaseID, c.CaseDescription, i.IncidentID, i.IncidentDate, i.IncidentType, i.Latitudes, i.Longitudes, i.Status, i.VictimID, i.SuspectID "
+                "FROM Cases c LEFT JOIN Incidents i ON c.CaseID = i.CaseID WHERE c.CaseID = %s")
             cursor.execute(select_query, (case_id,))
             results = cursor.fetchall()
 
@@ -156,7 +160,7 @@ class CrimeAnalysisServiceImpl(ICrimeAnalysisService,Incidents):
 
                 for row in results:
                     incident_id, incident_date, incident_type, latitude, longitude, status, victim_id, suspect_id = row[
-                                                                                                                       2:]
+                                                                                                                    2:]
                     incidents.append(
                         Incidents(incident_id, incident_type, incident_date, latitude, longitude, status, victim_id,
                                   suspect_id, case_id))
@@ -173,8 +177,8 @@ class CrimeAnalysisServiceImpl(ICrimeAnalysisService,Incidents):
     def update_case_details(self, case: Case) -> bool:
         try:
             cursor = self.connection.cursor()
-            case_id=case.get_case_id()
-            in_cases = cursor.execute(('select * from cases where CaseID = %s'),(case_id, ))
+            case_id = case.get_case_id()
+            in_cases = cursor.execute(('select * from cases where CaseID = %s'), (case_id,))
             if in_cases:
                 update_query = "UPDATE Cases SET CaseDescription = %s WHERE CaseID = %s"
                 cursor.execute(update_query, (case.get_description(), case.get_case_id()))
